@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: calc
+  namespace: calc
+spec:
+  template:
+    spec:
+      containers:
+        - name: calc
+          image: grzesrap/calc
+          env:
+            - name: REDIS_HOST
+              value: "redis-master"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /code/data/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: "calc-input-config"
+      restartPolicy: Never
+  backoffLimit: 4
